@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Tutorial Lesson - 03</title>
+    <link rel="stylesheet" href="css/bootstarp-3.3.7-flatly.min.css"> <!-- 引入bootstrap - CSS前端框架，这里用了bootswatch.com的皮肤 -->
+
+    <!-- 自定义样式，为了演示一些特殊用法 -->
+    <style>
+        .completed {
+            color: #00a379;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Bootstrap的部分不用关注，只是基础样式 -->
+<div class="navbar navbar-default navbar-static-top"></div>
+
+<div class="container" id="app"> <!-- 这里的ID是用来提供Vue操作的 -->
+    <div class="row">
+        <!-- 数组数据操作和动态显示，事件的监听和绑定等 -->
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">组件化开发</div>
+                <div class="panel-body">
+                    <h4>My Todos {{todoCount}}</h4>
+                    <todo-items :todos="todos"></todo-items> <!-- :是v-bink的简写-->
+                    <todo-from :todos="todos"></todo-from>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-template" id="todo-items-template">
+    <!-- 将显示数组数据部分组件化： -->
+    <ul class="list-group">
+        <!-- 通过v-bind来根据数据的不同设置class样式；把index输出，是为了提供删除使用 -->
+        <li class="list-group-item"
+            v-bind:class="{ 'completed' : todo.completed}"
+            v-for="(todo,index) in todos">
+            {{todo.title}}
+            <button class="btn btn-success btn-xs pull-right"
+                    v-bind:class="[todo.completed ? 'btn-danger' : 'btn-success']"
+                    v-on:click="completedTodo(todo)">
+                {{ todo.completed ? 'undo' : 'done' }}
+            </button>
+            <button class="btn btn-warning btn-xs pull-right" v-on:click="delTodo(index)">Delete</button>
+        </li>
+    </ul>
+</script>
+
+<script type="text/x-template" id="todo-add-from-template">
+    <!-- 增加数组数据部分组件化 -->
+    <form v-on:submit.prevent="addTodo(newTodo)"> <!-- 事件绑定；prevent是用来阻止form的默认提交行为 -->
+        <div class="from-group">
+            <input type="text" v-model="newTodo.title" class="form-control" placeholder="Add a new todo">
+        </div>
+        <div class="from-group">
+            <button class="btn btn-success" type="submit">Add Todo</button>
+        </div>
+    </form>
+</script>
+
+<script src="js/vue-2.4.4.js"></script> <!-- 引入Vue - 渐进式JavaScript前端框架 -->
+<script>
+    // 注册组件：显示数组数据部分
+    Vue.component('todo-items', { // HTML中是使用component的名字
+        template: '#todo-items-template', // JS中template的名字
+        props: ['todos'], // 引入到组件中的数据/变量
+        methods: { // 逻辑方法
+            delTodo(index) {
+                this.todos.splice(index, 1)
+            },
+            completedTodo(todo){
+                todo.completed = !todo.completed
+            }
+        }
+    })
+
+    // 注册组件：表单提交
+    Vue.component('todo-from', { // HTML中是使用component的名字
+        template: '#todo-add-from-template', // JS中template的名字
+        props: ['todos'], // 引入到组件中的数据/变量
+        data() { // 注意组件中的数据是一个方法，不是一个对象
+            return {
+                newTodo: {id: null, title: '', completed:false}
+            }
+        },
+        methods: { // 逻辑方法
+            // 注意：这里使用了ES6的语法，如果IDE报错，请设置一下
+            // WebStorm设置方法：Preferences > Languages & Frameworks > JavaScript > ECMAScript 6
+            addTodo(newTodo) {
+                this.todos.push(newTodo)
+                this.newTodo = {id: null, title: '', completed:false}
+            }
+        }
+    })
+
+    new Vue({
+        el: '#app', // 决定VueJS起作用的区域
+        data: { // 基础数据和变量
+            todos: [
+                {id: 1, title: '1. Learn VueJS', completed:true}, // completed在应用假设是一种状态，需要通过class样式来显示在页面上的
+                {id: 2, title: '2. Coding', completed:false}
+            ]
+        },
+        computed: { // 页面中需要处理之后展示的数据，统一放这里
+            todoCount() {
+                return this.todos.length
+            }
+        }
+    })
+</script>
+<script>
+    /**************************************************************************
+     * 【第三课时知识点】
+     *
+     * JS区域知识点：
+     * Vue组件component
+     * 引用template模板
+     * 在component中注册template模板、定义传入的属性数据props、变量和数据data、方法methods
+     * HTML代码组件化
+     *
+     * HTML区域知识点：
+     * 使用component组件中注册的template模板
+     * 使用v-bink的简写 - : 一个冒号；来引用变量和数据
+     *************************************************************************/
+</script>
+
+</body>
+</html>

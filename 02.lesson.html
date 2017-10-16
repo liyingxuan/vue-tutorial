@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Tutorial Lesson - 02</title>
+    <link rel="stylesheet" href="css/bootstarp-3.3.7-flatly.min.css"> <!-- 引入bootstrap - CSS前端框架，这里用了bootswatch.com的皮肤 -->
+
+    <!-- 自定义样式，为了演示一些特殊用法 -->
+    <style>
+        .completed {
+            color: #00a379;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Bootstrap的部分不用关注，只是基础样式 -->
+<div class="navbar navbar-default navbar-static-top"></div>
+
+<div class="container" id="app"> <!-- 这里的ID是用来提供Vue操作的 -->
+    <div class="row">
+        <!-- 数组数据操作和动态显示，事件的监听和绑定等 -->
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">数组增加、删除；事件监听、绑定、修饰符</div>
+                <div class="panel-body">
+                    <h4>My Todos {{todoCount}}</h4>
+                    <!-- 显示数组数据 -->
+                    <ul class="list-group">
+                        <!-- 通过v-bind来根据数据的不同设置class样式；把index输出，是为了提供删除使用 -->
+                        <li class="list-group-item"
+                            v-bind:class="{ 'completed' : todo.completed}"
+                            v-for="(todo,index) in todos">
+                            {{todo.title}}
+                            <button class="btn btn-success btn-xs pull-right"
+                                    v-bind:class="[todo.completed ? 'btn-danger' : 'btn-success']"
+                                    v-on:click="completedTodo(todo)">
+                                {{ todo.completed ? 'undo' : 'done' }}
+                            </button>
+                            <button class="btn btn-warning btn-xs pull-right" v-on:click="delTodo(index)">Delete</button>
+                        </li>
+                    </ul>
+                    <!-- 增加数组数据 -->
+                    <form v-on:submit.prevent="addTodo(newTodo)"> <!-- 事件绑定；prevent是用来阻止form的默认提交行为 -->
+                        <div class="from-group">
+                            <input type="text" v-model="newTodo.title" class="form-control" placeholder="Add a new todo">
+                        </div>
+                        <div class="from-group">
+                            <button class="btn btn-success" type="submit">Add Todo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/vue-2.4.4.js"></script> <!-- 引入Vue - 渐进式JavaScript前端框架 -->
+<script>
+    new Vue({
+        el: '#app', // 决定VueJS起作用的区域
+        data: { // 基础数据和变量
+            message: '数据双向绑定演示，请在改变输入框中的文字。',
+            todos: [
+                {id: 1, title: '1. Learn VueJS', completed:true}, // completed在应用假设是一种状态，需要通过class样式来显示在页面上的
+                {id: 2, title: '2. Coding', completed:false}
+            ],
+            newTodo: {id: null, title: '', completed:false}
+        },
+        computed: { // 页面中需要处理之后展示的数据，统一放这里
+            todoCount() {
+                return this.todos.length
+            }
+        },
+        methods: { // 逻辑方法
+            // 注意：这里使用了ES6的语法，如果IDE报错，请设置一下
+            // WebStorm设置方法：Preferences > Languages & Frameworks > JavaScript > ECMAScript 6
+            addTodo(newTodo) {
+                this.todos.push(newTodo)
+                this.newTodo = {id: null, title: '', completed:false}
+            },
+            delTodo(index) {
+                this.todos.splice(index, 1)
+            },
+            completedTodo(todo){
+                todo.completed = !todo.completed
+            }
+        }
+    })
+</script>
+<script>
+    /**************************************************************************
+     * 【第二课时知识点】
+     *
+     * JS区域知识点：
+     * 无新知识点
+     *
+     * HTML区域知识点：
+     * v-bind 用于响应式的更新HTML特性
+     * v-bind:class 增加/删除/更新HTML元素的class；这里展示了两种写法：{}和[]；
+     *     注意：这里新增的class会填写在HTML元素本身class的后面，有可能会覆盖和影响之前的样式。
+     *************************************************************************/
+</script>
+
+</body>
+</html>
