@@ -1,4 +1,9 @@
-#### Vue2.0教程
+#### Vue2.0教程 - Vue.js
+
+[基于Vue CLI构建的Vue项目教程](https://github.com/liyingxuan/vue-cli-tutorial)
+
+
+[简书教程](http://www.jianshu.com/p/d38ad14abfbf)
 
 ##### 1. 说明
 > 为了方便记忆和学习，整理了一下之前学习VueJS的要点，并通过在中的代码注释来阐述知识点。  
